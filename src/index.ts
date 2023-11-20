@@ -9,18 +9,9 @@ proxy.use("*", cors());
 
 proxy.mount("/", async (req) => {
   const path = new URL(req.url).pathname;
-  const url = API_URL + path;
-  const { method, headers, body } = req;
-  const response = await fetch(url, {
-    method,
-    headers,
-    body,
-  });
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers: response.headers,
-  });
+  const url = new URL(path, API_URL);
+  const res = await fetch(url, req);
+  return new Response(res.body, res);
 });
 
 export default proxy;
